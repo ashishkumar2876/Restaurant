@@ -1,17 +1,43 @@
 import "./App.css";
 import Login from "./auth/Login";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import MainLayout from "./MainLayout";
 import Signup from "./auth/Signup";
 import ForgotPassword from "./auth/ForgotPassword";
 import ResetPassword from "./auth/ResetPassword";
 import VerifyEmail from "./auth/VerifyEmail";
-import Navbar from "./components/Navbar";
+import HeroSection from "./components/HeroSection";
+import MainLayout from "./layout/MainLayout";
+import Profile from "./components/Profile";
+import SearchPage from "./components/SearchPage";
+import RestaurantDetails from "./components/RestaurantDetails";
+import Cart from "./components/Cart";
 
 const appRouter = createBrowserRouter([
   {
     path: "",
-    element: <Navbar />,
+    element: <MainLayout />,
+    children:[
+      {
+        path:'/',
+        element:<HeroSection/>
+      },
+      {
+        path:'/profile',
+        element:<Profile/>
+      },
+      {
+        path:'/search/:text',
+        element:<SearchPage/>
+      },
+      {
+        path:"/restaurant/:id",
+        element:<RestaurantDetails/>
+      },
+      {
+        path:"/cart",
+        element:<Cart/>
+      }
+    ]
   },
   {
     path: "/signup",
