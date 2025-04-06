@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Menubar,
   MenubarContent,
@@ -13,7 +13,18 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
-import { HandPlatter, Loader2, Menu, Moon, PackageCheck, ShoppingCart, SquareMenu, Sun, User, UtensilsCrossed } from "lucide-react";
+import {
+  HandPlatter,
+  Loader2,
+  Menu,
+  Moon,
+  PackageCheck,
+  ShoppingCart,
+  SquareMenu,
+  Sun,
+  User,
+  UtensilsCrossed,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   Sheet,
@@ -25,13 +36,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+
 import { Separator } from "./ui/separator";
+import { useUserStore } from "@/store/useUserStore";
+import { useCartStore } from "@/store/useCartStore";
+import { useThemeStore } from "@/store/useThemeStore";
 
 const Navbar = () => {
-  const loading = false;
-  const admin = true;
+  const { user, loading, logout } = useUserStore();
+  const { cart } = useCartStore();
+  const {setTheme}=useThemeStore();
+
   return (
     <div className="max-w-6xl mx-auto">
       <div className="flex items-center justify-between h-14 ">
@@ -45,7 +60,7 @@ const Navbar = () => {
               <Link to="/profile">Profile</Link>
               <Link to="/order/status">Order</Link>
             </div>
-            {admin && (
+            {user?.admin && (
               <Menubar>
                 <MenubarMenu>
                   <MenubarTrigger>Dashboard</MenubarTrigger>
@@ -75,28 +90,31 @@ const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Light</DropdownMenuItem>
-                  <DropdownMenuItem>Dark</DropdownMenuItem>
+                  <DropdownMenuItem onClick={()=>setTheme('light')}>Light</DropdownMenuItem>
+                  <DropdownMenuItem onClick={()=>setTheme('dark')}>Dark</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
             <Link to="/cart" className="relative cursor-pointer">
               <ShoppingCart />
-              <Button
-                size={"icon"}
-                className="absolute h-4 w-4 text-xs rounded-full -inset-y-3 left-4 bg-red-500"
-              >
-                5
-              </Button>
+              {cart.length > 0 && (
+                <Button
+                  size={"icon"}
+                  className="absolute h-4 w-4 text-xs rounded-full -inset-y-3 left-4 bg-red-500"
+                >
+                  {cart.length}
+                </Button>
+              )}
             </Link>
             <div>
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarImage src={user?.profilePicture} />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </div>
             <div>
               <Button
+                onClick={logout}
                 disabled={loading}
                 className="bg-[#D19254] hover:bg-[#d18c47]"
               >
@@ -124,6 +142,10 @@ const Navbar = () => {
 export default Navbar;
 
 const MobileNavbar = () => {
+  const {setTheme}=useThemeStore();
+  const { user, logout, loading } = useUserStore();
+  const {cart}=useCartStore();
+  const navigate=useNavigate();
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -137,7 +159,7 @@ const MobileNavbar = () => {
       </SheetTrigger>
       <SheetContent className="flex flex-col p-4">
         <SheetHeader className="flex flex-row items-center justify-between mt-4">
-          <SheetTitle>AshishEats</SheetTitle>
+          <SheetTitle><div className="cursor-pointer font-bold text-xl" onClick={()=>navigate("/")}>AshishEats</div></SheetTitle>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
@@ -147,48 +169,84 @@ const MobileNavbar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>Light</DropdownMenuItem>
-              <DropdownMenuItem>Dark</DropdownMenuItem>
+              <DropdownMenuItem onClick={()=>setTheme('light')}>Light</DropdownMenuItem>
+              <DropdownMenuItem onClick={()=>setTheme('dark')}>Dark</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </SheetHeader>
-        <Separator/>
+        <Separator />
         <SheetDescription>
-          <Link to='/profile' className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-200 cursor-pointer hover:text-gray-900 font-medium">
-          <User/>
-          <span>Profile</span>
+          <Link
+            to="/profile"
+            className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-200 cursor-pointer hover:text-gray-900 font-medium"
+          >
+            <User />
+            <span>Profile</span>
           </Link>
-          <Link to='/profile' className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-200 cursor-pointer hover:text-gray-900 font-medium">
-          <HandPlatter/>
-          <span>Order</span>
+          <Link
+            to="/order/status"
+            className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-200 cursor-pointer hover:text-gray-900 font-medium"
+          >
+            <HandPlatter />
+            <span>Order</span>
           </Link>
-          <Link to='/cart' className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-200 cursor-pointer hover:text-gray-900 font-medium">
-          <ShoppingCart/>
-          <span>Cart(0)</span>
+          <Link
+            to="/cart"
+            className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-200 cursor-pointer hover:text-gray-900 font-medium"
+          >
+            <ShoppingCart />
+            <span>Cart({cart.length})</span>
           </Link>
-          <Link to='/profile' className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-200 cursor-pointer hover:text-gray-900 font-medium">
-          <SquareMenu/>
-          <span>Menu</span>
-          </Link>
-          <Link to='/profile' className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-200 cursor-pointer hover:text-gray-900 font-medium">
-          <UtensilsCrossed/>
-          <span>Restaurant</span>
-          </Link>
-          <Link to='/profile' className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-200 cursor-pointer hover:text-gray-900 font-medium">
-          <PackageCheck/>
-          <span>Restaurant Orders</span>
-          </Link>
+          {user?.admin && (
+            <>
+              <Link
+                to="/admin/menu"
+                className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-200 cursor-pointer hover:text-gray-900 font-medium"
+              >
+                <SquareMenu />
+                <span>Menu</span>
+              </Link>
+              <Link
+                to="/admin/restaurant"
+                className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-200 cursor-pointer hover:text-gray-900 font-medium"
+              >
+                <UtensilsCrossed />
+                <span>Restaurant</span>
+              </Link>
+              <Link
+                to="/admin/orders"
+                className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-200 cursor-pointer hover:text-gray-900 font-medium"
+              >
+                <PackageCheck />
+                <span>Restaurant Orders</span>
+              </Link>
+            </>
+          )}
         </SheetDescription>
         <SheetFooter>
           <div className="flex flex-row items-center gap-2">
             <Avatar>
-              <AvatarImage/>
+              <AvatarImage src={user?.profilePicture}/>
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <h1 className="font-bold">Ashish Mernstack</h1>
           </div>
           <SheetClose asChild>
-            <Button type="submit" className="bg-[#D19254] hover:bg-[#d18c47] w-full">Logout</Button>
+            {}
+            <Button
+              onClick={logout}
+              type="submit"
+              className="bg-[#D19254] hover:bg-[#d18c47] w-full"
+            >
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <Loader2 className="animate-spin" />
+                  <span>Please wait</span>
+                </div>
+              ) : (
+                "Logout"
+              )}
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

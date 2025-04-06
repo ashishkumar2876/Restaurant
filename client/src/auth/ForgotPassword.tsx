@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 const ForgotPassword = () => {
   const [email, setEmail] = useState<string>("");
   const loading = false;
+  
   return (
     <div className="flex items-center justify-center min-h-screen">
       <form className="flex flex-col gap-5 md:border md:p-8 w-full max-w-md rounded-lg mx-4">

@@ -3,20 +3,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { FormEvent, useRef, useState } from "react";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
+import { useUserStore } from "@/store/useUserStore";
 
 const Profile = () => {
+  const {user,updateProfile}=useUserStore();
+  const [loading,setLoading]=useState(false);
   const [profileData,setProfileData]=useState({
-    fullname:"",
-    email:"",
-    address:"",
-    city:"",
-    country:"",
-    profilePicture:""
+    fullname:user?.fullname || "",
+    email:user?.email || "",
+    address:user?.address || "",
+    city:user?.city || "",
+    country:user?.country || "",
+    profilePicture:user?.profilePicture || ""
   });
   const imageRef=useRef<HTMLInputElement | null>(null);
-  const [selectedProfilePicture,setSelectedProfilePicture]=useState<string>("");
+  const [selectedProfilePicture,setSelectedProfilePicture]=useState<string>(user?.profilePicture || "");
 
-  const loading=false;
+
   const fileChangeHandler=(e:React.ChangeEvent<HTMLInputElement>)=>{
     const file=e.target.files?.[0];
     if(file){
@@ -38,10 +41,13 @@ const Profile = () => {
     setProfileData({...profileData,[name]:value})
   }
 
-  const updateProfileHandler=(e:FormEvent<HTMLFormElement>)=>{
+  const updateProfileHandler= async(e:FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
     //api implementation
-    console.log(profileData);
+    setLoading(true);
+    await updateProfile(profileData);
+    setLoading(false);
+   
   }
   return (
     <form onSubmit={updateProfileHandler} className="max-w-6xl mx-auto my-5">
@@ -68,8 +74,9 @@ const Profile = () => {
         <div className="bg-gray-200 flex items-center gap-4 rounded-sm p-2">
           <Mail className="text-gray-500"/>
           <div className="w-full">
-            <Label>Email</Label>
+            <Label className="dark:text-gray-600">Email</Label>
             <input
+            disabled
             name="email"
             value={profileData.email}
             onChange={changeHandler}
@@ -80,7 +87,7 @@ const Profile = () => {
         <div className="bg-gray-200 flex items-center gap-4 rounded-sm p-2">
           <Locate className="text-gray-500"/>
           <div className="w-full">
-            <Label>Address</Label>
+            <Label className="text-gray-600">Address</Label>
             <input
             name="address"
             value={profileData.address}
@@ -92,7 +99,7 @@ const Profile = () => {
         <div className="bg-gray-200 flex items-center gap-4 rounded-sm p-2">
           <MapPin className="text-gray-500"/>
           <div className="w-full">
-            <Label>City</Label>
+            <Label className="text-gray-600">City</Label>
             <input
             name="city"
             value={profileData.city}
@@ -104,7 +111,7 @@ const Profile = () => {
         <div className="bg-gray-200 flex items-center gap-4 rounded-sm p-2">
           <MapPinnedIcon className="text-gray-500"/>
           <div className="w-full">
-            <Label>Country</Label>
+            <Label className="text-gray-600">Country</Label>
             <input
             name="country"
             value={profileData.country}

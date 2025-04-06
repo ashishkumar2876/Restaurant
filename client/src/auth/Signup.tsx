@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { SignupInputState, userSignupSchema } from "@/schema/userSchema";
+import { useUserStore } from "@/store/useUserStore";
 import { Loader2, LockKeyhole, Mail, Phone, User } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [input, setInput] = useState<SignupInputState>({
@@ -15,6 +16,11 @@ const Signup = () => {
   });
 
   const [errors, setErrors] = useState<Partial<SignupInputState>>({});
+
+  const navigate=useNavigate();
+
+  const {signup,loading}=useUserStore();
+
   const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
@@ -28,11 +34,16 @@ const Signup = () => {
       setErrors(fieldsError as Partial<SignupInputState>);
       return;
     }
-
     //api implementation
-    console.log(input);
+    try {
+      await signup(input);
+      navigate('/verify-email')
+
+    } catch (error) {
+     
+    }
+    
   };
-  const loading = false;
   return (
     <div className="flex items-center justify-center min-h-screen">
       <form

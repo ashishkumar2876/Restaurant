@@ -1,14 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useUserStore } from "@/store/useUserStore";
 import { Loader2 } from "lucide-react";
-import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { FormEvent, useRef, useState } from "react";
+
 
 const VerifyEmail = () => {
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const inputRef = useRef<any>([]);
-  const navigate = useNavigate();
-  const loading=false;
+  
+  const {loading,verifyEmail}=useUserStore();
 
   const handleChange = (index: number, value: string) => {
     if (/^[0-9]$/.test(value)) {
@@ -43,9 +44,10 @@ const VerifyEmail = () => {
     
   };
 
-  const handleSubmit=(e:any)=>{
+  const handleSubmit=async (e:FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
-    console.log(otp);
+    const verificationCode:string=otp.join("");
+    await verifyEmail(verificationCode);
   }
   return (
     <div className="flex items-center justify-center h-screen w-full">
@@ -58,7 +60,7 @@ const VerifyEmail = () => {
         </div>
         <form onSubmit={handleSubmit}>
           <div className="flex justify-between">
-            {otp.map((letter: string, idx: number) => (
+            {otp.map((letter: any, idx: number) => (
               <Input
                 key={idx}
                 ref={(element: any) => (inputRef.current[idx] = element)}
