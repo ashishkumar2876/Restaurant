@@ -10,7 +10,7 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import path from 'path';
 dotenv.config({});
-
+import { Request,Response } from 'express';
 const app=express();
 const PORT=process.env.PORT || 3000;
 
@@ -33,7 +33,7 @@ app.use("/api/v1/menu",menuRoute);
 app.use("/api/v1/order",orderRoute);
 
 app.use(express.static(path.join(DIRNAME, 'client', 'dist')));
-app.use("*",(_,res)=>{
+app.use("*",(_:Request,res:Response)=>{
     res.sendFile(path.resolve(DIRNAME,"client","dist","index.html"));
 });
 //http://localhost:8000/api/v1/user/signup
