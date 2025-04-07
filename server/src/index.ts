@@ -12,7 +12,7 @@ import path from 'path';
 dotenv.config({});
 import { Request,Response } from 'express';
 const app=express();
-const PORT=process.env.PORT || 3000;
+const PORT=process.env.PORT;
 
 const DIRNAME=path.resolve();
 
@@ -32,7 +32,7 @@ app.use("/api/v1/restaurant",restaurantRoute);
 app.use("/api/v1/menu",menuRoute);
 app.use("/api/v1/order",orderRoute);
 
-app.use(express.static(path.join(DIRNAME, 'client', 'dist')));
+app.use(express.static(path.join(DIRNAME, '/client/dist')));
 app.use("*",(_:Request,res:Response)=>{
     res.sendFile(path.resolve(DIRNAME,"client","dist","index.html"));
 });
