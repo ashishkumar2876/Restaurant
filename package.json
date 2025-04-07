@@ -6,7 +6,7 @@
     "dev": "nodemon 'node --max-old-space-size=4096' server/src/index.ts",
     "build": "npm install && npm install --prefix client && npm run build --prefix client",
     "start": "nodemon 'node --max-old-space-size=4096' server/src/index.ts",
-    "stripe": "stripe listen --forward-to localhost:8005/api/v1/order/webhook",
+    "stripe": "stripe listen --forward-to localhost:8000/api/v1/order/webhook",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
