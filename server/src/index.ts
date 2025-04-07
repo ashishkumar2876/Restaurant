@@ -40,5 +40,4 @@ app.use("*",(_:Request,res:Response)=>{
 
 app.listen(PORT,()=>{
     connectDB();
-    console.log(PORT);
 })
