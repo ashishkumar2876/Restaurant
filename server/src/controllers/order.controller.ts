@@ -73,11 +73,11 @@ export const createCheckoutSession=async (req:Request,res:Response):Promise<void
         const session=await stripe.checkout.sessions.create({
             payment_method_types:['card'],
             shipping_address_collection:{
-                allowed_countries:['GB','US','CA']
+                allowed_countries:['GB','US','CA','IN']
             },
             line_items:lineItems,
             mode:'payment',
-            success_url: `https://restaurant-2-4xp5.onrender.com/order/status`,
+            success_url: `https://restaurant-2-4xp5.onrender.com/order/status?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `https://restaurant-2-4xp5.onrender.com/cart`,
             metadata:{
                 orderId:order._id.toString(),
