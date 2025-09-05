@@ -77,8 +77,8 @@ export const createCheckoutSession=async (req:Request,res:Response):Promise<void
             },
             line_items:lineItems,
             mode:'payment',
-            success_url: `${process.env.FRONTENT_URL}/order/status`,
-            cancel_url: `${process.env.FRONTENT_URL}/cart`,
+            success_url: `https://restaurant-2-4xp5.onrender.com/order/status`,
+            cancel_url: `https://restaurant-2-4xp5.onrender.com/cart`,
             metadata:{
                 orderId:order._id.toString(),
                 images:JSON.stringify(menuItems.map((item:any)=>item.image))
