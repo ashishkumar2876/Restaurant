@@ -3,7 +3,7 @@ import axios from "axios";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-const API_END_POINT="https://restaurant-1-gitf.onrender.com/api/v1/order";
+const API_END_POINT="http://localhost:7001/api/v1/order";
 
 axios.defaults.withCredentials=true;
 
