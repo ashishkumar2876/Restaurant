@@ -184,3 +184,51 @@ export const createLineItems=(checkoutSessionRequest:CheckoutSessionRequest,menu
     })
     return lineItems;
 }
+export const verifyOrder = async (req: Request, res: Response) => {
+  const { session_id } = req.query;
+
+  if (!session_id || typeof session_id !== "string") {
+    return res.status(400).json({
+      success: false,
+      message: "session_id query parameter is required",
+    });
+  }
+
+  try {
+    // Retrieve the Stripe session
+    const session = await stripe.checkout.sessions.retrieve(session_id);
+
+    // Extract orderId from metadata
+    const orderId = session.metadata?.orderId;
+    if (!orderId) {
+      return res.status(400).json({
+        success: false,
+        message: "Order ID not found in Stripe session metadata",
+      });
+    }
+
+    // Find order in DB
+    const order = await Order.findById(orderId)
+      .populate("restaurant")
+      .populate("user");
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    // Send order data to frontend
+    return res.status(200).json({
+      success: true,
+      order,
+    });
+  } catch (error) {
+    console.error("Error verifying order:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to verify order",
+    });
+  }
+};
