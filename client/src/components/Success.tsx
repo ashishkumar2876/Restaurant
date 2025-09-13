@@ -11,7 +11,7 @@ const Success = () => {
 
   // State for a single order verification
   const [order, setOrder] = useState(null);
-  const [loading, setLoading] = useState(true);
+  
   const [error, setError] = useState(null);
 
   // State for fetching all orders
@@ -42,19 +42,10 @@ const Success = () => {
           setError("Failed to fetch order");
         })
         .finally(() => {
-          setLoading(false);
         });
     }
   }, [sessionId]);
 
-  // Loading state
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-700 dark:text-gray-300 text-lg">Loading...</p>
-      </div>
-    );
-  }
 
   // Error state
   if (error) {
