@@ -93,7 +93,10 @@ export const createCheckoutSession=async (req:Request,res:Response):Promise<void
             })
             return;
         }
-        order.totalAmount = session.amount_total;
+        if (session.amount_total === null) {
+    throw new Error("Amount total is null");
+}
+order.totalAmount = session.amount_total;
         await order.save();
 
         res.status(200).json({
