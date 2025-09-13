@@ -6,6 +6,7 @@ const router=express.Router();
 router.route("/").get(isAuthenticated,getOrders);
 router.route("/checkout/create-checkout-session").post(isAuthenticated,createCheckoutSession);
 router.route("/webhook").post(express.raw({type: 'application/json'}), stripeWebhook);
+router.route("/verify").get(verifyOrder);
 
 
 export default router;
