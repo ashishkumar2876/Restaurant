@@ -29,9 +29,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Serve frontend static files
-const frontendPath = path.join(__dirname, '../client/dist'); // Adjust path if needed
-
-app.use(express.static(frontendPath));
 
 // API routes
 app.use("/api/v1/user", userRoute);
@@ -40,9 +37,6 @@ app.use("/api/v1/menu", menuRoute);
 app.use("/api/v1/order", orderRoute);
 
 // For all other routes, serve index.html (React router support)
-app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'index.html'));
-});
 
 app.listen(PORT, () => {
     connectDB();
