@@ -79,7 +79,7 @@ const Success = () => {
           <div className="mb-4 flex items-center">
             <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mr-2">Total:</h2>
             <IndianRupee />
-            <span className="ml-1 text-lg font-medium">{order.totalAmount}</span>
+            <span className="ml-1 text-lg font-medium">{order.totalAmount/100}</span>
           </div>
 
           {/* Cart Items */}
@@ -99,7 +99,7 @@ const Success = () => {
                     </div>
                     <div className="text-right flex items-center">
                       <IndianRupee />
-                      <span className="ml-1 text-lg font-medium">{item.price / 100}</span>
+                      <span className="ml-1 text-lg font-medium">{item.price}</span>
                     </div>
                   </div>
                 ))}
@@ -145,7 +145,7 @@ const Success = () => {
           <div className="mb-4 flex items-center">
             <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mr-2">Total:</h2>
             <IndianRupee />
-            <span className="ml-1 text-lg font-medium">{order.totalAmount}</span>
+            <span className="ml-1 text-lg font-medium">{order.totalAmount/100}</span>
           </div>
 
           {/* Cart Items */}
@@ -167,7 +167,7 @@ const Success = () => {
                     </div>
                     <div className="text-right flex items-center">
                       <IndianRupee />
-                      <span className="ml-1 text-lg font-medium">{item.price / 100}</span>
+                      <span className="ml-1 text-lg font-medium">{item.price}</span>
                     </div>
                   </div>
                 );
