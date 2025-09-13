@@ -15,7 +15,9 @@ const Success = () => {
       return;
     }
 
-    fetch(`https://your-backend-url.com/api/orders/verify?session_id=${sessionId}`)
+    fetch(`https://your-backend-service.onrender.com/api/v1/order/verify?session_id=${sessionId}`, {
+  credentials: 'include',
+})
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
