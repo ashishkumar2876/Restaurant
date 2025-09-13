@@ -12,12 +12,7 @@ const Success = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!sessionId) {
-      setError("No session_id found in URL");
-      setLoading(false);
-      return;
-    }
-
+   
     fetch(`https://restaurant-nkif.onrender.com/api/v1/order/verify?session_id=${sessionId}`, {
       credentials: "include",
     })
